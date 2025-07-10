@@ -5,7 +5,13 @@ import java.util.List;
 
 public class Main {
     public static void main (String[] args) {
-        //
+        Customer c1 = new Customer("Eric james", 1, 200);
+        c1.cashIn(100);
+        c1.showBalance();
+
+        Cashier cs1 = new Cashier("Miles", 2);
+        System.out.println(cs1.getName());
+
     }
 }
 
@@ -210,4 +216,62 @@ class SeniorDiscount implements DiscountStrategy {
     public String getName() {
         return "SENIOR DISCOUNT (12%)";
     }
+}
+
+class Cart {
+    private List<LibraryItem> cartitems;
+
+    public Cart () {
+        this.cartitems = new ArrayList<>();
+    }
+
+    public void addItem(LibraryItem item) {
+        LibraryItem existing = findItem(item.getCode());
+
+        if (existing != null) {
+            int newqtty = existing.getQuantity() + item.getQuantity();
+            existing.setQuantity(newqtty);
+
+        } else {
+            cartitems.add(item);
+        }
+    }
+
+    public void removeItem(LibraryItem item) {
+        LibraryItem existing = findItem(item.getCode());
+
+        if (existing != null) {
+            cartitems.remove(existing);
+        } else {
+            System.out.println("Item Doens't Exist!");
+        }
+    }
+
+    public LibraryItem findItem(int code) {
+        for (LibraryItem item : cartitems) {
+            if (item.getCode() == code) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public List<LibraryItem>  getList() {
+        return cartitems;
+    }
+
+    public void showCart() {
+        for (LibraryItem item : cartitems) {
+            System.out.println(item.getDetails());
+        }
+    }
+
+ 
+}
+
+
+class OrderProcessor {
+
+
+
 }
