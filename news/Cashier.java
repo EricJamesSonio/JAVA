@@ -6,6 +6,7 @@ public class Cashier {
     private int id;
     private OrderProcessor processor;
     
+    
     public Cashier(String name, int id) {
         this.name = name;
         this.id = id;

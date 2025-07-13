@@ -24,14 +24,16 @@ public class OrderProcessor {
         double discountedPrice = discountedPrice(cart, discount);
         if (payment < discountedPrice) {
             System.out.println("Payment not Enough! ");
+            return null;
         }
 
         double change = payment - discountedPrice;
+        customer.pay(discountedPrice);
         Receipt receipt = new Receipt(payment, total, discountedPrice, change, customer.getName(), cashier.getName());
         return receipt;
     }
 
-    public String displayReceipts() {
+    public void displayReceipts() {
         for (Receipt r : receipts) {
             System.out.println(r.getReceipt());
        }
