@@ -473,5 +473,4 @@ class Cashier {
     public Receipt processOrder(Cart cart, double payment, DiscountStrategy discount, Customer customer) {
         return processor.processOrder(cart,payment,discount, customer, this);
     }
-
 }
