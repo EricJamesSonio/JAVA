@@ -29,6 +29,16 @@ public class Try {
 
         eric.displayCart();
 
+        Order order1 = new Order(eric, eric.getCart());
+
+        PWDDiscount pwd = new PWDDiscount();
+        Receipt receipt = rj.processOrder(eric, order1, 4000, pwd);
+
+        System.out.println(receipt.getReceipt());
+
+
+    
+
         
 
     }
@@ -168,6 +178,10 @@ class Customer {
 
     public void displayCart() {
         cart.displayCart();
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
 
