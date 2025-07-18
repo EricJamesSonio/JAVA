@@ -81,8 +81,8 @@ class Student {
             borrowedbooks.put(existingInBorrowed, newqtty);
             lib.updateQuantity(existing.getCode(), -quantity);
         } else {
-            int newqtty = lib.getItems().get(existing) + quantity;
-            borrowedbooks.put(existing, newqtty);
+            System.out.println("Borrowed Item : " + existing.getName());
+            borrowedbooks.put(existing, quantity);
             lib.updateQuantity(existing.getCode(), -quantity);
         }
     }
@@ -97,9 +97,11 @@ class Student {
     }
 
     public void displayBorrowed() {
+        System.out.println("<--- Borrowed  --->");
         for (LibraryItem item : borrowedbooks.keySet()) {
             System.out.println(item.getDetails() + borrowedbooks.get(item));
         }
+        System.out.println();
         }
 }
 
@@ -119,12 +121,15 @@ class LibraryStore {
     }
 
     public void displayItems() {
+        System.out.println("<--- Library Items --->");
         for (LibraryItem item : items.keySet()) {
             System.out.println(item.getDetails() + items.get(item));
-        } 
+        }
+        System.out.println();
     }
 
     public LibraryItem findItem(int code) {
+        
         for (LibraryItem item : items.keySet()) {
             if (item.getCode() == code) {
                 return item;
@@ -140,6 +145,7 @@ class LibraryStore {
             int newqtty = items.get(existing) + quantity;
             items.put(existing, newqtty);
         } else {
+            System.out.println("Added Item : " + item.getName());
             items.put(item, quantity);
             }
     }
@@ -156,6 +162,7 @@ class LibraryStore {
             }
         } else {
             System.out.println("Item Doesn't exist!");
+            System.out.println();
         }
     }
 
