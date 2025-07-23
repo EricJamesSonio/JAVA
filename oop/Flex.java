@@ -6,6 +6,29 @@ import java.util.List;
 
 public class Flex {
     public static void main(String[] args) {
+        DigitalProduct smart50 = new DigitalProduct("Smart50", 12, 50.00);
+        DigitalProduct smart100 = new DigitalProduct("Smart100", 11, 100.00);
+        DigitalProduct smart150 = new DigitalProduct("Smart150", 14, 150.00);
+
+        smart50.getDetails();
+        smart100.getDetails();
+        smart150.getDetails();
+
+        PWDID pwd = new PWDID();
+        SeniorID senior = new SeniorID();
+
+        Customer c1 = new Customer(pwd);
+
+        c1.addItem(smart150, 12);
+        c1.addItem(smart50, 10);
+        c1.displayItems();
+
+        Cashier cash1 = new Cashier("Zeht", 12);
+
+        cash1.processOrder(c1, 5000);
+        cash1.displayOrders();
+
+
 
     }
 }
@@ -120,7 +143,7 @@ class Customer {
     private Cart cart;
 
     public Customer(IdStrategy id) {
-        this.id = null;
+        this.id = id;
         this.cart = new Cart();
     }
 
@@ -148,14 +171,29 @@ class Customer {
 class Cashier {
     private String name;
     private int code;
+    private List<Order> orders;
 
     public Cashier (String name, int code) {
         this.name = name;
         this.code = code;
+        this.orders = new ArrayList<>();
     }
 
-    public processOrder() {
-        
+    public Receipt processOrder(Customer customer, double payment) {
+        Customer customer1 = customer;
+        Order order = new Order(customer1);
+        if (payment < order.getTotalPayable()) {
+            System.out.println("Not enough Money");
+            return null;
+        }
+
+        double appliedDiscount = order.getDiscount().applyDiscount(order.getTotal());
+        double change = payment - order.getTotalPayable();
+
+        Receipt receipt = new Receipt (order.getTotal(), order.getTotalPayable(), change, customer,  appliedDiscount);
+        System.out.println(receipt.getReceipt());
+        return receipt;
+
     }
 
     public String getName() {
@@ -166,16 +204,29 @@ class Cashier {
         return code;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void displayOrders() {
+        for (Order item : orders) {
+            System.out.println(item.getDetails());
+    }
+    }
+
 }
 
 class Order {
     private Customer customer;
     private double total;
     private double totalPayable;
+    private DiscountStrategy discount;
 
     public Order(Customer customer) {
         this.customer = customer;
         this.total = computeTotal();
+        this.totalPayable = computeTotalPayable();
+        this.discount = getDiscount();
     }
 
     public double computeTotal() {
@@ -188,23 +239,41 @@ class Order {
 
     public double computeTotalPayable() {
         IdStrategy id = customer.getID();
-        DiscountStategy discount = null;
-        if (id.getName() == "PWD") {
+        DiscountStrategy discount = null;
+        if (id.getName().equals("PWD")) {
             PWDDiscount pwd = new PWDDiscount();
             discount = pwd;
-            } else if (id.getName() == "SENIOR") {
+            } else if (id.getName().equals( "SENIOR")) {
                 SeniorDiscount senior = new SeniorDiscount();
                 discount = senior;
             } else {
-
+                NoDiscount nodiscount = new NoDiscount();
+                discount = nodiscount;
             }
         double total = computeTotal();
-
+    
+        double appliedDiscount = discount.applyDiscount(total);
+        double totalPayable = total - appliedDiscount;
+        return totalPayable;
     }
 
+    public double getTotal() {
+        return total;
+    }
 
+    public double getTotalPayable() {
+        return totalPayable;
+    }
 
+    public DiscountStrategy getDiscount() {
+        return discount;
+        }
 
+    public String getDetails() {
+        return "Total : " + total + 
+                "Total Payable : " + totalPayable +
+                "Discount :" + discount.getClass();
+    }
 }
 
 abstract class IdStrategy {
@@ -231,24 +300,49 @@ interface DiscountStrategy {
     public double applyDiscount(double total);
 }
 
-class PWDDiscount implements DiscountStategy{
+class PWDDiscount implements DiscountStrategy{
     @Override
     public double applyDiscount(double total) {
-        return total * 0.88;
+        return total * 0.12;
     }
 }
 
-class SeniorDiscount implements DiscountStategy{
+class SeniorDiscount implements DiscountStrategy{
     @Override
     public double applyDiscount(double total) {
-        return total * 0.90;
+        return total * 0.10;
     }
 }
 
-class NoDiscount implements DiscountStategy{
+class NoDiscount implements DiscountStrategy{
     @Override
     public double applyDiscount(double total) {
-        return total ;
+        return total * 0.00;
     }
 }
 
+class Receipt {
+    private double total;
+    private double totalPayable;
+    private double change;
+    private Customer customer;
+    private double appliedDiscount;
+
+    public Receipt (double total, double totalPayable, double change, Customer customer, double appliedDiscount) {
+        this.total = total;
+        this.totalPayable = totalPayable;
+        this.change = change;
+        this.customer = customer;
+        this.appliedDiscount = appliedDiscount;
+    }
+
+    public String getReceipt() {
+        return "Total : " + total + 
+                "Applied Discount" + appliedDiscount + 
+                "Total PAyable : " + totalPayable +
+                "Change : " + change + 
+                "Customer : " + customer;
+
+    }
+
+}
