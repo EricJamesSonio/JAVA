@@ -39,16 +39,7 @@ public class EmployeeManagement {
         return employees;
     }
 
-    public List<Receipt> getAllRecords() {
-        List<Receipt> allTransactionRecords = new ArrayList<>();
-
-        for (Employee emp : employees) {
-            if (emp instanceof Cashier cashier) {
-                allTransactionRecords.addAll(cashier.getTransactionHistory());
-            }
-        }
-        return allTransactionRecords;
-    }
+    
 
     public void displayEmployees() {
         for (Employee emp : employees) {

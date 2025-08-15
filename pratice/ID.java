@@ -1,12 +1,14 @@
-package exam;
+package pratice;
 
-public class Id {
+public class ID {
     private boolean isPWD;
     private boolean isSenior;
+    private boolean isValid;
 
-    public Id (boolean isPWD, boolean isSenior) {
+    public ID(boolean isPWD, boolean isSenior, boolean isValid) {
         this.isPWD = isPWD;
         this.isSenior = isSenior;
+        this.isValid = isValid;   
     }
 
     public boolean getIsPWD() {
@@ -15,5 +17,9 @@ public class Id {
 
     public boolean getIsSenior() {
         return isSenior;
+    }
+
+    public boolean getIsValid() {
+        return isValid;
     }
 }
