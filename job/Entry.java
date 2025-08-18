@@ -92,6 +92,7 @@ class Account {
         if (amount > wallet) {
             return 0.0;
         }
+
         double newAmount = amount * chargefee;
         wallet -= newAmount;
         return amount;
